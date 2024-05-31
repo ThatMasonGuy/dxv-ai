@@ -1,0 +1,16 @@
+{
+  "$schema": "https://shadcn-vue.com/schema.json",
+  "style": "new-york",
+  "typescript": false,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "src/style.css",
+    "baseColor": "stone",
+    "cssVariables": true
+  },
+  "framework": "vite",
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils"
+  }
+}

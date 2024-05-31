@@ -1,0 +1,32 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Match for the mailing collection
+    match /mailing/{docId} {
+      // Allow write access to anyone (for adding emails)
+      allow create: if true;
+
+      // Deny read access to everyone
+      allow read: if false;
+    }
+
+    // Rules for the users collection
+    match /users/{userId} {
+      // Allow read access only to the authenticated user
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      // Allow write access (create, update, delete) only to the authenticated user
+      allow write: if request.auth != null && request.auth.uid == userId;
+
+      // Allow account creation by the Cloud Function
+      allow create: if request.auth != null && request.auth.uid == userId ||
+                       request.auth == null && request.resource.data.keys().hasAll(['firstName', 'lastName', 'userName', 'emailAddress', 'phoneNumber', 'dateOfBirth']);
+    }
+
+    // Deny all other reads and writes
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
